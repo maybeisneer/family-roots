@@ -1,0 +1,28 @@
+{
+  "takeYourTime": "Take your time. There's no limit.",
+  "cameraAccessNeeded": "Camera access needed",
+  "progressSaved": "Progress saved",
+  "pause": "Pause",
+  "resume": "Resume",
+  "done": "Done",
+  "takeBreak": "Take a Break",
+  "finish": "Finish",
+  "startRecording": "Start Recording",
+  "continueNow": "Continue Now",
+  "recording": "Recording",
+  "paused": "Paused",
+  "questionPrefix": "Question",
+  "positionYourself": "Position yourself in frame",
+  "centerFace": "Center your face in the frame",
+  "checkLighting": "Make sure you're well-lit (face the light source)",
+  "checkBackground": "Check your background is tidy and not distracting",
+  "findQuietSpace": "Find a quiet space with minimal background noise",
+  "tipsTitle": "Tips for the best recording",
+  "storiesShared": "{count} stories",
+  "savingResponse": "Saving your response...",
+  "uploadingProgress": "Uploading... {progress}%",
+  "listeningToYou": "Listening to what you shared...",
+  "preparingNextQuestion": "Preparing the next question...",
+  "thankYouSharing": "Thank you for sharing. Your stories are precious."
+}
+

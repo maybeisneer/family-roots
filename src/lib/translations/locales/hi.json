@@ -1,0 +1,28 @@
+{
+  "takeYourTime": "अपना समय लें। कोई सीमा नहीं है।",
+  "cameraAccessNeeded": "कैमरे की अनुमति चाहिए",
+  "progressSaved": "प्रगति सहेजी गई",
+  "pause": "रोकें",
+  "resume": "फिर से शुरू करें",
+  "done": "हो गया",
+  "takeBreak": "विश्राम लें",
+  "finish": "समाप्त करें",
+  "startRecording": "रिकॉर्डिंग शुरू करें",
+  "continueNow": "अभी जारी रखें",
+  "recording": "रिकॉर्डिंग",
+  "paused": "रुका हुआ",
+  "questionPrefix": "प्रश्न",
+  "positionYourself": "अपने आप को फ्रेम में रखें",
+  "centerFace": "अपने चेहरे को फ्रेम के बीच में रखें",
+  "checkLighting": "सुनिश्चित करें कि आप अच्छी रोशनी में हैं (रोशनी की ओर मुंह करें)",
+  "checkBackground": "जांचें कि आपकी पृष्ठभूमि साफ़ है और ध्यान भटकाने वाली नहीं है",
+  "findQuietSpace": "कम शोर वाली शांत जगह खोजें",
+  "tipsTitle": "सर्वोत्तम रिकॉर्डिंग के लिए सुझाव",
+  "storiesShared": "{count} कहानियाँ",
+  "savingResponse": "आपका जवाब सहेज रहे हैं...",
+  "uploadingProgress": "अपलोड हो रहा है... {progress}%",
+  "listeningToYou": "आपने जो साझा किया उसे सुन रहे हैं...",
+  "preparingNextQuestion": "अगला प्रश्न तैयार कर रहे हैं...",
+  "thankYouSharing": "साझा करने के लिए धन्यवाद। आपकी कहानियाँ अनमोल हैं।"
+}
+

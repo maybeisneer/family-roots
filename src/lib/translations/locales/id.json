@@ -1,0 +1,28 @@
+{
+  "takeYourTime": "Ambil waktu Anda. Tidak ada batasan.",
+  "cameraAccessNeeded": "Akses kamera diperlukan",
+  "progressSaved": "Kemajuan tersimpan",
+  "pause": "Jeda",
+  "resume": "Lanjutkan",
+  "done": "Selesai",
+  "takeBreak": "Istirahat",
+  "finish": "Selesai",
+  "startRecording": "Mulai merekam",
+  "continueNow": "Lanjutkan sekarang",
+  "recording": "Merekam",
+  "paused": "Dijeda",
+  "questionPrefix": "Pertanyaan",
+  "positionYourself": "Posisikan diri Anda dalam bingkai",
+  "centerFace": "Pusatkan wajah Anda dalam bingkai",
+  "checkLighting": "Pastikan pencahayaan baik (menghadap sumber cahaya)",
+  "checkBackground": "Periksa latar belakang rapi dan tidak mengganggu",
+  "findQuietSpace": "Temukan tempat tenang dengan sedikit kebisingan",
+  "tipsTitle": "Tips untuk rekaman terbaik",
+  "storiesShared": "{count} cerita",
+  "savingResponse": "Menyimpan jawaban Anda...",
+  "uploadingProgress": "Mengunggah... {progress}%",
+  "listeningToYou": "Mendengarkan apa yang Anda bagikan...",
+  "preparingNextQuestion": "Menyiapkan pertanyaan berikutnya...",
+  "thankYouSharing": "Terima kasih telah berbagi. Cerita Anda sangat berharga."
+}
+

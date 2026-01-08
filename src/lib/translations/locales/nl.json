@@ -1,0 +1,28 @@
+{
+  "takeYourTime": "Neem je tijd. Er is geen limiet.",
+  "cameraAccessNeeded": "Camera-toegang nodig",
+  "progressSaved": "Voortgang opgeslagen",
+  "pause": "Pauzeren",
+  "resume": "Hervatten",
+  "done": "Klaar",
+  "takeBreak": "Neem een pauze",
+  "finish": "Voltooien",
+  "startRecording": "Start opname",
+  "continueNow": "Nu doorgaan",
+  "recording": "Opnemen",
+  "paused": "Gepauzeerd",
+  "questionPrefix": "Vraag",
+  "positionYourself": "Positioneer jezelf in beeld",
+  "centerFace": "Centreer je gezicht in beeld",
+  "checkLighting": "Zorg voor goede verlichting (naar het licht gericht)",
+  "checkBackground": "Controleer of de achtergrond netjes is en niet afleidt",
+  "findQuietSpace": "Vind een rustige ruimte met weinig achtergrondgeluid",
+  "tipsTitle": "Tips voor de beste opname",
+  "storiesShared": "{count} verhalen",
+  "savingResponse": "Je antwoord wordt opgeslagen...",
+  "uploadingProgress": "Uploaden... {progress}%",
+  "listeningToYou": "Luisteren naar wat je gedeeld hebt...",
+  "preparingNextQuestion": "Volgende vraag wordt voorbereid...",
+  "thankYouSharing": "Bedankt voor het delen. Je verhalen zijn waardevol."
+}
+

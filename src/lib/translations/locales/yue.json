@@ -1,0 +1,28 @@
+{
+  "takeYourTime": "慢慢嚟，冇時間限制。",
+  "cameraAccessNeeded": "需要相機權限",
+  "progressSaved": "進度已儲存",
+  "pause": "暫停",
+  "resume": "繼續",
+  "done": "完成",
+  "takeBreak": "休息吓",
+  "finish": "結束",
+  "startRecording": "開始錄影",
+  "continueNow": "而家繼續",
+  "recording": "錄緊",
+  "paused": "已暫停",
+  "questionPrefix": "問題",
+  "positionYourself": "將自己擺喺鏡頭入面",
+  "centerFace": "將塊面擺喺鏡頭中間",
+  "checkLighting": "確保光線充足（面向光源）",
+  "checkBackground": "檢查背景整齊唔會分心",
+  "findQuietSpace": "搵個安靜嘅地方，減少背景噪音",
+  "tipsTitle": "最佳錄影貼士",
+  "storiesShared": "{count} 個故事",
+  "savingResponse": "儲存緊你嘅回答...",
+  "uploadingProgress": "上傳中... {progress}%",
+  "listeningToYou": "聽緊你分享嘅嘢...",
+  "preparingNextQuestion": "準備緊下一條問題...",
+  "thankYouSharing": "多謝你分享。你嘅故事好珍貴。"
+}
+

@@ -1,0 +1,28 @@
+{
+  "takeYourTime": "Не торопитесь. Ограничений нет.",
+  "cameraAccessNeeded": "Требуется доступ к камере",
+  "progressSaved": "Прогресс сохранён",
+  "pause": "Пауза",
+  "resume": "Продолжить",
+  "done": "Готово",
+  "takeBreak": "Сделать перерыв",
+  "finish": "Завершить",
+  "startRecording": "Начать запись",
+  "continueNow": "Продолжить сейчас",
+  "recording": "Запись",
+  "paused": "На паузе",
+  "questionPrefix": "Вопрос",
+  "positionYourself": "Расположитесь в кадре",
+  "centerFace": "Разместите лицо по центру кадра",
+  "checkLighting": "Убедитесь в хорошем освещении (лицом к источнику света)",
+  "checkBackground": "Проверьте, что фон аккуратный и не отвлекает",
+  "findQuietSpace": "Найдите тихое место с минимальным фоновым шумом",
+  "tipsTitle": "Советы для лучшей записи",
+  "storiesShared": "{count} историй",
+  "savingResponse": "Сохраняем ваш ответ...",
+  "uploadingProgress": "Загрузка... {progress}%",
+  "listeningToYou": "Слушаем то, чем вы поделились...",
+  "preparingNextQuestion": "Готовим следующий вопрос...",
+  "thankYouSharing": "Спасибо за то, что поделились. Ваши истории бесценны."
+}
+

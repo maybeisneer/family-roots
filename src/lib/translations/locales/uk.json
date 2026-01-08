@@ -1,0 +1,28 @@
+{
+  "takeYourTime": "Не поспішайте. Обмежень немає.",
+  "cameraAccessNeeded": "Потрібен доступ до камери",
+  "progressSaved": "Прогрес збережено",
+  "pause": "Пауза",
+  "resume": "Продовжити",
+  "done": "Готово",
+  "takeBreak": "Зробити перерву",
+  "finish": "Завершити",
+  "startRecording": "Почати запис",
+  "continueNow": "Продовжити зараз",
+  "recording": "Запис",
+  "paused": "На паузі",
+  "questionPrefix": "Питання",
+  "positionYourself": "Розташуйтесь у кадрі",
+  "centerFace": "Розмістіть обличчя по центру кадру",
+  "checkLighting": "Переконайтесь у хорошому освітленні (обличчям до джерела світла)",
+  "checkBackground": "Перевірте, що фон акуратний і не відволікає",
+  "findQuietSpace": "Знайдіть тихе місце з мінімальним фоновим шумом",
+  "tipsTitle": "Поради для найкращого запису",
+  "storiesShared": "{count} історій",
+  "savingResponse": "Зберігаємо вашу відповідь...",
+  "uploadingProgress": "Завантаження... {progress}%",
+  "listeningToYou": "Слухаємо те, чим ви поділились...",
+  "preparingNextQuestion": "Готуємо наступне питання...",
+  "thankYouSharing": "Дякуємо, що поділились. Ваші історії безцінні."
+}
+

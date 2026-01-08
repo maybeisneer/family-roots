@@ -1,0 +1,28 @@
+{
+  "takeYourTime": "Acele etmeyin. Süre sınırı yok.",
+  "cameraAccessNeeded": "Kamera erişimi gerekli",
+  "progressSaved": "İlerleme kaydedildi",
+  "pause": "Duraklat",
+  "resume": "Devam et",
+  "done": "Tamam",
+  "takeBreak": "Ara ver",
+  "finish": "Bitir",
+  "startRecording": "Kayda başla",
+  "continueNow": "Şimdi devam et",
+  "recording": "Kaydediliyor",
+  "paused": "Duraklatıldı",
+  "questionPrefix": "Soru",
+  "positionYourself": "Kendinizi çerçeveye yerleştirin",
+  "centerFace": "Yüzünüzü çerçevenin ortasına yerleştirin",
+  "checkLighting": "İyi aydınlatma olduğundan emin olun (ışık kaynağına dönük)",
+  "checkBackground": "Arka planın düzenli ve dikkat dağıtıcı olmadığını kontrol edin",
+  "findQuietSpace": "Az arka plan gürültüsü olan sessiz bir alan bulun",
+  "tipsTitle": "En iyi kayıt için ipuçları",
+  "storiesShared": "{count} hikaye",
+  "savingResponse": "Yanıtınız kaydediliyor...",
+  "uploadingProgress": "Yükleniyor... {progress}%",
+  "listeningToYou": "Paylaştıklarınızı dinliyoruz...",
+  "preparingNextQuestion": "Sonraki soru hazırlanıyor...",
+  "thankYouSharing": "Paylaştığınız için teşekkürler. Hikayeleriniz çok değerli."
+}
+

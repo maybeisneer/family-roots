@@ -1,0 +1,28 @@
+{
+  "takeYourTime": "Prenditi il tuo tempo. Non c'è limite.",
+  "cameraAccessNeeded": "È necessario l'accesso alla fotocamera",
+  "progressSaved": "Progressi salvati",
+  "pause": "Pausa",
+  "resume": "Riprendi",
+  "done": "Fatto",
+  "takeBreak": "Fai una pausa",
+  "finish": "Termina",
+  "startRecording": "Inizia registrazione",
+  "continueNow": "Continua ora",
+  "recording": "Registrazione",
+  "paused": "In pausa",
+  "questionPrefix": "Domanda",
+  "positionYourself": "Posizionati nell'inquadratura",
+  "centerFace": "Centra il viso nell'inquadratura",
+  "checkLighting": "Assicurati di essere ben illuminato (di fronte alla luce)",
+  "checkBackground": "Verifica che lo sfondo sia ordinato e non distraente",
+  "findQuietSpace": "Trova uno spazio tranquillo con poco rumore di fondo",
+  "tipsTitle": "Consigli per la migliore registrazione",
+  "storiesShared": "{count} storie",
+  "savingResponse": "Salvataggio della risposta...",
+  "uploadingProgress": "Caricamento... {progress}%",
+  "listeningToYou": "Ascoltiamo ciò che hai condiviso...",
+  "preparingNextQuestion": "Preparazione della prossima domanda...",
+  "thankYouSharing": "Grazie per aver condiviso. Le tue storie sono preziose."
+}
+
