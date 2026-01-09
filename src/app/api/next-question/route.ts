@@ -54,6 +54,9 @@ export async function POST(request: NextRequest) {
       .map((r, i) => `Q${i + 1}: "${r.question}"\nA${i + 1}: "${r.transcript || '[No response]'}"`)
       .join('\n\n');
 
+    // Build list of previously asked questions for duplicate prevention
+    const previousQuestions = responses.map(r => r.question).filter(Boolean);
+
     // First, analyze what topics have been covered
     const analysisPrompt = `Analyze this interview and determine which life story topics have been meaningfully covered.
 
@@ -121,17 +124,23 @@ Respond ONLY with a JSON object like:
 
     // Generate the next question based on phase
     let questionPrompt = '';
-    
+
+    // Build questions already asked section for all prompts (duplicate prevention)
+    const questionsAlreadyAsked = previousQuestions.length > 0
+      ? `\n\nQUESTIONS ALREADY ASKED (DO NOT REPEAT OR REPHRASE THESE):\n${previousQuestions.map((q, i) => `${i + 1}. "${q}"`).join('\n')}`
+      : '';
+
     if (phase === 'final') {
       questionPrompt = `Generate a FINAL question to end this life story interview.
 
-Topics covered: ${analysis.covered.join(', ')}
+Topics covered: ${analysis.covered.join(', ')}${questionsAlreadyAsked}
 
 RULES:
 - NO name prefix (Don't start with "Mom," or a name)
 - This is the CLOSING question
 - Under 15 words
 - Legacy/wisdom theme
+- Do NOT repeat or rephrase any question from the list above
 
 Good examples:
 - "What do you hope future generations remember about you?"
@@ -144,12 +153,13 @@ Respond with ONLY the question.`;
       questionPrompt = `Generate a wrap-up question for this life story interview.
 
 Topics covered: ${analysis.covered.join(', ')}
-${analysis.interesting_thread ? `Could explore: ${analysis.interesting_thread}` : ''}
+${analysis.interesting_thread ? `Could explore: ${analysis.interesting_thread}` : ''}${questionsAlreadyAsked}
 
 RULES:
 - NO name prefix (Don't start with "Mom," or a name)
 - Under 20 words
 - Either wisdom/legacy theme OR one final story
+- Do NOT repeat or rephrase any question from the list above
 
 Good: "What advice would you give to young people today?"
 Good: "What are you most proud of in your life?"
@@ -165,7 +175,7 @@ What they just shared: "${current_transcript}"
 
 Topics covered: ${analysis.covered.join(', ') || 'None yet'}
 Topics to explore: ${CORE_TOPICS.filter(t => !analysis.covered.includes(t)).join(', ')}
-${analysis.interesting_thread ? `Follow up on: ${analysis.interesting_thread}` : ''}
+${analysis.interesting_thread ? `Follow up on: ${analysis.interesting_thread}` : ''}${questionsAlreadyAsked}
 
 RULES:
 - NO NAME PREFIX (Don't start with "Mom," or "${interviewee_name},")
@@ -173,11 +183,14 @@ RULES:
 - ONE topic only (no "and")
 - Simple phrasing: "Tell me about...", "What was it like...", "What do you remember..."
 - From THEIR perspective only
+- CRITICAL: Move to a NEW topic from the "Topics to explore" list. Do NOT ask about topics already covered.
+- CRITICAL: Do NOT repeat or rephrase any question from the "QUESTIONS ALREADY ASKED" list. Each question must be unique.
 
 Good: "Tell me about your wedding day."
 Good: "What was it like moving to a new country?"
 Bad: "Mom, I'd love to hear about your wedding day and how you felt."
 Bad: "${interviewee_name}, can you share about..."
+Bad: Asking about "childhood memories" again when already asked.
 
 Respond with ONLY the question.`;
     }

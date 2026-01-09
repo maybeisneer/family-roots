@@ -22,7 +22,7 @@ interface Interview extends BaseInterview {
 }
 
 type ProcessingStage = 'uploading' | 'transcribing' | 'generating';
-type ScreenState = 'loading' | 'error' | 'welcome' | 'resume' | 'camera_setup' | 'recording' | 'break' | 'wrapup';
+type ScreenState = 'loading' | 'error' | 'welcome' | 'resume' | 'camera_setup' | 'recording' | 'review' | 'break' | 'wrapup';
 
 // Helper to format duration
 function formatDuration(seconds: number): string {
@@ -61,6 +61,13 @@ export default function InterviewPage() {
   const [interviewPhase, setInterviewPhase] = useState<'exploring' | 'deepening' | 'wrapping_up' | 'final'>('exploring');
   const [isLastQuestion, setIsLastQuestion] = useState(false);
   const [coveragePercent, setCoveragePercent] = useState(0);
+
+  // Pending recording state (for review before upload)
+  const [pendingRecording, setPendingRecording] = useState<{
+    videoBlob: Blob;
+    transcript: string;
+    duration: number;
+  } | null>(null);
 
   // Refs
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -270,16 +277,14 @@ export default function InterviewPage() {
     }
   }, []);
 
-  // Stop recording and IMMEDIATELY upload to Firebase
+  // Stop recording and go to review screen
   const stopRecording = useCallback(async () => {
     if (!mediaRecorderRef.current || !interview) return;
 
     setIsRecording(false);
-    setIsProcessing(true);
-    setProcessingStage('uploading');
 
-    const duration = recordingStartTime 
-      ? Math.round((Date.now() - recordingStartTime) / 1000) 
+    const duration = recordingStartTime
+      ? Math.round((Date.now() - recordingStartTime) / 1000)
       : 0;
 
     // Stop speech transcription
@@ -298,6 +303,33 @@ export default function InterviewPage() {
     // Create video blob
     const videoBlob = new Blob(chunksRef.current, { type: 'video/webm' });
 
+    // Store pending recording and go to review screen
+    setPendingRecording({
+      videoBlob,
+      transcript: finalTranscript,
+      duration,
+    });
+    setScreenState('review');
+  }, [interview, liveTranscript, recordingStartTime]);
+
+  // Redo recording - discard and start over
+  const handleRedo = useCallback(() => {
+    setPendingRecording(null);
+    setLiveTranscript('');
+    setRecordingStartTime(null);
+    chunksRef.current = [];
+    setScreenState('recording');
+  }, []);
+
+  // Confirm recording - upload to Firebase and proceed
+  const confirmRecording = useCallback(async () => {
+    if (!pendingRecording || !interview) return;
+
+    setIsProcessing(true);
+    setProcessingStage('uploading');
+
+    const { videoBlob, transcript: finalTranscript, duration } = pendingRecording;
+
     try {
       // 1. Create initial response record to get an ID
       const newResponseRef = await createResponse({
@@ -310,13 +342,12 @@ export default function InterviewPage() {
       });
 
       // 2. Upload video directly to Firebase Storage (Client-side)
-      // This bypasses Vercel's 4.5MB body limit
       setUploadProgress(0);
       const videoUrl = await uploadVideo(videoBlob, interview.id, newResponseRef.id, (progress) => {
         setUploadProgress(progress);
       });
 
-      // 3. Update response with video URL (client-side, no API needed)
+      // 3. Update response with video URL
       const savedResponse = await updateResponse(newResponseRef.id, {
         video_url: videoUrl,
         transcript: finalTranscript || '',
@@ -341,15 +372,16 @@ export default function InterviewPage() {
       console.error('Error uploading response:', err);
       setUploadError('Failed to save your response. Please try again.');
       setIsProcessing(false);
+      setScreenState('review');
       return;
     }
 
     // Generate next question (AI evaluates coverage and decides phase)
     setProcessingStage('generating');
-    
+
     let nextQuestion = "Is there anything else you'd like to share?";
     let shouldEnd = false;
-    
+
     try {
       const nextQuestionResponse = await fetch('/api/next-question', {
         method: 'POST',
@@ -371,17 +403,17 @@ export default function InterviewPage() {
       if (nextQuestionResponse.ok) {
         const data = await nextQuestionResponse.json();
         nextQuestion = data.question;
-        
+
         // Update phase tracking
         if (data.phase) setInterviewPhase(data.phase);
         if (data.coverageRatio) setCoveragePercent(data.coverageRatio);
         if (data.isLastQuestion) setIsLastQuestion(true);
-        
+
         // AI says it's time to wrap up
         if (data.shouldWrapUp && !showWrapUpSuggestion && !data.isLastQuestion) {
           setShowWrapUpSuggestion(true);
         }
-        
+
         // This was the final question - go to completion
         if (data.isLastQuestion && isLastQuestion) {
           shouldEnd = true;
@@ -400,17 +432,23 @@ export default function InterviewPage() {
       }
     }
 
+    // Clear pending recording
+    setPendingRecording(null);
+
     setCurrentQuestion(nextQuestion);
     setCurrentQuestionIndex(prev => prev + 1);
     setIsProcessing(false);
     setLiveTranscript('');
     setRecordingStartTime(null);
+    chunksRef.current = [];
 
     // If AI determined this was the final question, go to completion
     if (shouldEnd) {
       setScreenState('wrapup');
+    } else {
+      setScreenState('recording');
     }
-  }, [interview, currentQuestion, currentQuestionIndex, liveTranscript, recordingStartTime, showWrapUpSuggestion, isLastQuestion]);
+  }, [interview, pendingRecording, currentQuestion, currentQuestionIndex, showWrapUpSuggestion, isLastQuestion]);
 
   // Handle starting interview (go to camera setup first)
   const handleStart = async () => {
@@ -644,6 +682,78 @@ export default function InterviewPage() {
         onStartRecording={handleStartRecording}
         intervieweeName={interview.interviewee_name}
       />
+    );
+  }
+
+  // Review screen - after recording, before upload
+  if (screenState === 'review' && interview && pendingRecording) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center p-6">
+        {isProcessing ? (
+          <ProcessingState
+            stage={processingStage}
+            uploadProgress={uploadProgress}
+          />
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center space-y-6 max-w-md w-full"
+          >
+            <div className="w-16 h-16 mx-auto bg-amber-500/20 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+
+            <div className="space-y-2">
+              <h1 className="text-2xl font-serif text-white">
+                How was that?
+              </h1>
+              <p className="text-stone-400">
+                {formatDuration(pendingRecording.duration)} recorded
+              </p>
+            </div>
+
+            {/* Show transcript preview if available */}
+            {pendingRecording.transcript && (
+              <div className="p-4 bg-stone-900/50 border border-stone-800 rounded-xl text-left max-h-32 overflow-y-auto">
+                <p className="text-xs text-stone-500 mb-2">What we heard:</p>
+                <p className="text-sm text-stone-300 italic">
+                  &ldquo;{pendingRecording.transcript.slice(0, 200)}{pendingRecording.transcript.length > 200 ? '...' : ''}&rdquo;
+                </p>
+              </div>
+            )}
+
+            {uploadError && (
+              <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+                <p className="text-sm text-red-300">{uploadError}</p>
+              </div>
+            )}
+
+            <div className="space-y-3 pt-2">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={confirmRecording}
+                className="w-full py-4 bg-amber-500 text-white rounded-xl font-medium text-lg shadow-lg shadow-amber-500/25 hover:bg-amber-400 transition-colors"
+              >
+                Keep & Continue
+              </motion.button>
+
+              <button
+                onClick={handleRedo}
+                className="w-full py-3 text-stone-400 hover:text-white transition-colors flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Redo This Answer
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </div>
     );
   }
 

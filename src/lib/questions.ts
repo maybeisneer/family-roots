@@ -90,45 +90,36 @@ export const QUESTION_THEMES = {
 };
 
 // Get starter questions based on relationship and birthplace
+// These are simpler fallback questions - 5 easy-to-answer questions covering life arcs
 export function getStarterQuestions(relationship: string, birthplace: string, currentLocation?: string): string[] {
-  const questions = [
-    "What's your earliest memory? Take me back to that moment.",
-    `Tell me about growing up in ${birthplace}. What was it like back then?`,
-    "Tell me about your parents. What do you remember most about them?",
-  ];
+  const questions: string[] = [];
 
-  // Add migration question if locations differ significantly
-  if (currentLocation && birthplace && 
-      !currentLocation.toLowerCase().includes(birthplace.toLowerCase()) && 
+  // 1. Early life - simple and concrete
+  questions.push(`What was your childhood home like in ${birthplace}?`);
+
+  // 2. Formative years
+  questions.push("What did you love doing as a teenager?");
+
+  // 3. Love & relationships - relationship-specific
+  if (relationship === 'mother' || relationship === 'grandmother') {
+    questions.push("How did you and Dad meet?");
+  } else if (relationship === 'father' || relationship === 'grandfather') {
+    questions.push("How did you and Mom meet?");
+  } else {
+    questions.push("Who was the most important person in your life?");
+  }
+
+  // 4. Life journey - migration or career
+  if (currentLocation && birthplace &&
+      !currentLocation.toLowerCase().includes(birthplace.toLowerCase()) &&
       !birthplace.toLowerCase().includes(currentLocation.toLowerCase())) {
-    questions.push(`How did you feel when you first arrived in ${currentLocation}? What was the biggest change?`);
+    questions.push(`What made you decide to move to ${currentLocation}?`);
+  } else {
+    questions.push("What was the biggest risk you ever took?");
   }
 
-  questions.push("What was a typical day like when you were young?");
-
-  // Add relationship-specific questions
-  if (relationship === 'mother') {
-    questions.push("How did you meet my father? Tell me that story.");
-    questions.push("What was it like when you first held me?");
-  } else if (relationship === 'father') {
-    questions.push("How did you meet my mother? Tell me that story.");
-    questions.push("What was going through your mind when you became a father?");
-  } else if (relationship === 'grandmother') {
-    questions.push("How did you meet my grandfather?");
-    questions.push("What was my parent like as a child?");
-  } else if (relationship === 'grandfather') {
-    questions.push("How did you meet my grandmother?");
-    questions.push("What was my parent like as a child?");
-  } else if (['aunt', 'uncle'].includes(relationship)) {
-    questions.push("What are your favorite memories with my parent growing up?");
-  }
-
-  questions.push(
-    "What traditions or customs were important in your family?",
-    "What challenges did you overcome that made you who you are today?",
-    "What are you most proud of in your life?",
-    "What wisdom or advice do you want to pass down to the future generations of our family?"
-  );
+  // 5. Reflection - simple wisdom
+  questions.push("What do you wish you'd known when you were 20?");
 
   return questions;
 }

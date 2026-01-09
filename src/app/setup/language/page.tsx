@@ -52,12 +52,14 @@ export default function SetupStep3() {
     <div className="space-y-8">
       <StepIndicator steps={SETUP_STEPS} currentStep={3} />
 
-      <div className="text-center space-y-2">
+      <div className="text-center space-y-3">
         <h1 className="text-2xl font-serif text-white">
-          What language {name ? `does ${name}` : 'do they'} prefer?
+          What language will {name || 'they'} speak?
         </h1>
-        <p className="text-stone-500">
-          They can speak in whatever language they&apos;re most comfortable with
+        <p className="text-stone-400">
+          {name || 'They'} can record the interview in any language.
+          <br />
+          <span className="text-stone-500">Questions will be shown in this language, and we&apos;ll transcribe their answers automatically.</span>
         </p>
       </div>
 
