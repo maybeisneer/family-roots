@@ -60,6 +60,7 @@ export async function createInterview(data: Partial<Interview> & { questions?: s
     id: docRef.id,
     status: 'ready',
     organizer_name: data.organizer_name || '',
+    organizer_email: data.organizer_email,
     interviewee_name: data.interviewee_name || '',
     interviewee_age: data.interviewee_age,
     relationship: data.relationship || '',

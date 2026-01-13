@@ -19,41 +19,72 @@ export function AudioVisualizer({ stream, isRecording }: AudioVisualizerProps) {
       return;
     }
 
-    const audioContext = new AudioContext();
-    const source = audioContext.createMediaStreamSource(stream);
-    const analyzer = audioContext.createAnalyser();
-    
-    analyzer.fftSize = 64;
-    analyzer.smoothingTimeConstant = 0.8;
-    source.connect(analyzer);
-    analyzerRef.current = analyzer;
+    // Check if stream has active audio tracks
+    const audioTracks = stream.getAudioTracks();
+    if (audioTracks.length === 0 || !audioTracks[0].enabled) {
+      console.warn('AudioVisualizer: No active audio tracks in stream');
+      return;
+    }
 
-    const dataArray = new Uint8Array(analyzer.frequencyBinCount);
+    let audioContext: AudioContext | null = null;
+    let isCleanedUp = false;
 
-    const updateLevels = () => {
-      analyzer.getByteFrequencyData(dataArray);
-      
-      const newLevels = [];
-      const segmentSize = Math.floor(dataArray.length / 20);
-      
-      for (let i = 0; i < 20; i++) {
-        let sum = 0;
-        for (let j = 0; j < segmentSize; j++) {
-          sum += dataArray[i * segmentSize + j];
+    const setupAudio = async () => {
+      try {
+        audioContext = new AudioContext();
+
+        // Resume AudioContext if suspended (required by browsers after user interaction)
+        if (audioContext.state === 'suspended') {
+          await audioContext.resume();
         }
-        const avg = sum / segmentSize / 255;
-        newLevels.push(Math.max(0.1, avg));
+
+        if (isCleanedUp) return;
+
+        const source = audioContext.createMediaStreamSource(stream);
+        const analyzer = audioContext.createAnalyser();
+
+        analyzer.fftSize = 64;
+        analyzer.smoothingTimeConstant = 0.8;
+        source.connect(analyzer);
+        analyzerRef.current = analyzer;
+
+        const dataArray = new Uint8Array(analyzer.frequencyBinCount);
+
+        const updateLevels = () => {
+          if (isCleanedUp) return;
+
+          analyzer.getByteFrequencyData(dataArray);
+
+          const newLevels = [];
+          const segmentSize = Math.floor(dataArray.length / 20);
+
+          for (let i = 0; i < 20; i++) {
+            let sum = 0;
+            for (let j = 0; j < segmentSize; j++) {
+              sum += dataArray[i * segmentSize + j];
+            }
+            const avg = sum / segmentSize / 255;
+            newLevels.push(Math.max(0.1, avg));
+          }
+
+          setLevels(newLevels);
+          animationRef.current = requestAnimationFrame(updateLevels);
+        };
+
+        updateLevels();
+      } catch (err) {
+        console.error('AudioVisualizer: Failed to setup audio context', err);
       }
-      
-      setLevels(newLevels);
-      animationRef.current = requestAnimationFrame(updateLevels);
     };
 
-    updateLevels();
+    setupAudio();
 
     return () => {
+      isCleanedUp = true;
       cancelAnimationFrame(animationRef.current);
-      audioContext.close();
+      if (audioContext) {
+        audioContext.close();
+      }
     };
   }, [stream, isRecording]);
 

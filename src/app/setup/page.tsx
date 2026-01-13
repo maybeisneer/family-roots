@@ -22,6 +22,17 @@ export default function SetupStep1() {
     setAge(state.interviewee_age);
     setRelationship(state.relationship);
     setIsLoaded(true);
+
+    // Track setup started for TikTok Pixel (AddToCart = started funnel)
+    if (typeof window !== 'undefined' && (window as any).ttq) {
+      (window as any).ttq.track('AddToCart', {
+        content_type: 'product',
+        content_id: 'my-house-tales-interview',
+        content_name: 'My House Tales Interview',
+        value: 49.99,
+        currency: 'USD',
+      });
+    }
   }, []);
 
   const validate = () => {

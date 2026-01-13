@@ -100,14 +100,8 @@ export function getStarterQuestions(relationship: string, birthplace: string, cu
   // 2. Formative years
   questions.push("What did you love doing as a teenager?");
 
-  // 3. Love & relationships - relationship-specific
-  if (relationship === 'mother' || relationship === 'grandmother') {
-    questions.push("How did you and Dad meet?");
-  } else if (relationship === 'father' || relationship === 'grandfather') {
-    questions.push("How did you and Mom meet?");
-  } else {
-    questions.push("Who was the most important person in your life?");
-  }
+  // 3. Love & relationships - open-ended, works for anyone
+  questions.push("Who has been the most important person in your life?");
 
   // 4. Life journey - migration or career
   if (currentLocation && birthplace &&

@@ -35,12 +35,13 @@ QUESTION STYLE:
 - Open-ended but EASY to start answering
 - Short and simple (under 12 words)
 - Conversational, not formal
+- Questions must be SELF-CONTAINED - don't reference the person asking or assume the interviewee knows who set this up
 - If context mentions specific things (hobbies, career, events), reference them!
 
 GOOD EXAMPLES:
 - "What was your childhood home like?"
 - "What got you into cooking?"
-- "How did you and Dad meet?"
+- "Who has been the most important person in your life?"
 - "What was the biggest risk you ever took?"
 - "What do you wish you'd known at 20?"
 
@@ -48,6 +49,9 @@ BAD EXAMPLES (too vague or hard):
 - "Tell me about your earliest memory" (too hard to recall)
 - "What lessons do you want to pass on to future generations?" (too formal/heavy)
 - "Describe your childhood" (too broad)
+- "How did you two meet?" (confusing - who is "you two"?)
+- "How did you and Dad meet?" (assumes interviewee knows who's asking)
+- "How did you meet your spouse?" (assumes they have a spouse)
 
 Return ONLY a JSON array of exactly 5 question strings.`;
 

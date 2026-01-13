@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -38,6 +39,17 @@ export default function HomePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
+  // Track page view for TikTok Pixel
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (window as any).ttq) {
+      (window as any).ttq.track('ViewContent', {
+        content_type: 'product',
+        content_id: 'landing-page',
+        content_name: 'My House Tales Landing Page',
+      });
+    }
+  }, []);
+
   return (
     <div className="min-h-screen gradient-warm">
       {/* Navigation Header */}
@@ -49,7 +61,7 @@ export default function HomePage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
             </div>
-            <span className="text-stone-200 font-serif font-bold text-lg hidden sm:inline">Family Roots</span>
+            <span className="text-stone-200 font-serif font-bold text-lg hidden sm:inline">My House Tales</span>
           </Link>
           
           <nav>
@@ -148,7 +160,7 @@ export default function HomePage() {
         >
           <p className="text-amber-500 text-sm font-medium mb-4">See it in action</p>
           <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">
-            How Family Roots Works
+            How It Works
           </h2>
           <p className="text-stone-400 max-w-xl mx-auto">
             Watch how easy it is to capture your family&apos;s stories
@@ -301,57 +313,83 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Video Testimonials Section */}
-      <div className="max-w-4xl mx-auto px-6 py-20">
+      {/* UGC Gallery Section */}
+      <div className="max-w-5xl mx-auto px-6 py-20">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <p className="text-amber-500 text-sm font-medium mb-4">Hear from our users</p>
+          <p className="text-amber-500 text-sm font-medium mb-4">Moments worth preserving</p>
           <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">
-            Video Testimonials
+            Families watching together
           </h2>
           <p className="text-stone-400 max-w-xl mx-auto">
-            See how families are using Family Roots to preserve their heritage
+            There&apos;s nothing quite like gathering to hear stories from the ones you love
           </p>
         </motion.div>
 
-        {/* Video testimonials grid - placeholders */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {[1, 2].map((num) => (
-            <motion.div
-              key={num}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="relative aspect-video bg-stone-900 rounded-xl overflow-hidden border border-stone-800"
-            >
-              {/* Video placeholder */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="w-16 h-16 bg-amber-500/20 rounded-full flex items-center justify-center mb-3 cursor-pointer hover:bg-amber-500/30 transition-colors">
-                  <svg className="w-6 h-6 text-amber-500 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </div>
-                <p className="text-stone-500 text-sm">Video testimonial {num}</p>
-                <p className="text-stone-600 text-xs mt-1">
-                  Replace with: /videos/testimonial-{num}.mp4
-                </p>
-              </div>
-              
-              {/* Uncomment when you have videos:
-              <video 
-                className="w-full h-full object-cover"
-                controls
-                poster={`/videos/testimonial-${num}-poster.jpg`}
-              >
-                <source src={`/videos/testimonial-${num}.mp4`} type="video/mp4" />
-              </video>
-              */}
-            </motion.div>
-          ))}
+        {/* UGC Image Grid */}
+        <div className="grid md:grid-cols-2 gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative aspect-[4/3] rounded-2xl overflow-hidden"
+          >
+            <Image
+              src="/ugc/tiktok-couch.jpeg"
+              alt="Watching interview on TV from couch"
+              fill
+              className="object-cover"
+            />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="relative aspect-[4/3] rounded-2xl overflow-hidden"
+          >
+            <Image
+              src="/ugc/family-tv-night.jpeg"
+              alt="Multi-generational family watching together"
+              fill
+              className="object-cover"
+            />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="relative aspect-[4/3] rounded-2xl overflow-hidden"
+          >
+            <Image
+              src="/ugc/instagram-story-crying.jpeg"
+              alt="Emotional moment watching grandpa's interview"
+              fill
+              className="object-cover"
+            />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="relative aspect-[4/3] rounded-2xl overflow-hidden"
+          >
+            <Image
+              src="/ugc/sharing-phone.jpeg"
+              alt="Sharing interview on phone"
+              fill
+              className="object-cover"
+            />
+          </motion.div>
         </div>
       </div>
 
@@ -422,25 +460,33 @@ export default function HomePage() {
             }}
             className="px-8 py-4 bg-amber-500 text-white rounded-xl font-medium text-lg shadow-lg shadow-amber-500/25 hover:bg-amber-400 transition-colors"
           >
-            Start an Interview — It&apos;s Free
+            Start an Interview — $49.99
           </button>
         </motion.div>
       </div>
 
       {/* Footer */}
       <footer className="max-w-4xl mx-auto px-6 py-12 border-t border-stone-900">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-stone-600">
             <div className="w-6 h-6 bg-amber-500/50 rounded flex items-center justify-center">
               <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
             </div>
-            <span className="text-sm">Family Roots</span>
+            <span className="text-sm">My House Tales</span>
           </div>
-          <p className="text-sm text-stone-600">
-            Made with love for families everywhere
-          </p>
+          <div className="flex items-center gap-6 text-sm text-stone-600">
+            <Link href="/terms" className="hover:text-stone-400 transition-colors">
+              Terms
+            </Link>
+            <Link href="/privacy" className="hover:text-stone-400 transition-colors">
+              Privacy
+            </Link>
+            <a href="mailto:hey@neer.is" className="hover:text-stone-400 transition-colors">
+              Contact
+            </a>
+          </div>
         </div>
       </footer>
     </div>

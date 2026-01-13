@@ -7,6 +7,7 @@ export interface Interview {
   status: InterviewStatus;
   organizer_id?: string;    // Auth ID of the person who created it
   organizer_name: string;  // Person setting up the interview
+  organizer_email?: string; // Email from Stripe checkout for notifications
   interviewee_name: string;
   interviewee_age?: number;
   relationship: string;

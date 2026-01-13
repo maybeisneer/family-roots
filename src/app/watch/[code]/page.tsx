@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { getInterviewByCode } from '@/lib/firebase';
@@ -29,6 +29,7 @@ interface ExtendedInterview extends Interview {
 export default function WatchPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const code = params.code as string;
 
   const [interview, setInterview] = useState<ExtendedInterview | null>(null);
@@ -48,8 +49,32 @@ export default function WatchPage() {
   const [showControls, setShowControls] = useState(true);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
+  // Email verification state
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [emailInput, setEmailInput] = useState('');
+  const [verificationError, setVerificationError] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Check if user is already unlocked (came from interview complete or previously verified)
+  useEffect(() => {
+    // Check URL param for interview complete bypass
+    const fromComplete = searchParams.get('from') === 'complete';
+    if (fromComplete) {
+      setIsUnlocked(true);
+      // Store in sessionStorage for this code
+      sessionStorage.setItem(`watch_unlocked_${code}`, 'true');
+      return;
+    }
+
+    // Check sessionStorage for previous unlock
+    const wasUnlocked = sessionStorage.getItem(`watch_unlocked_${code}`);
+    if (wasUnlocked === 'true') {
+      setIsUnlocked(true);
+    }
+  }, [code, searchParams]);
 
   // Fetch interview data directly from Firebase
   useEffect(() => {
@@ -265,10 +290,44 @@ export default function WatchPage() {
   }, []);
 
   const formatTime = (seconds: number) => {
+    // Handle invalid values (Infinity, NaN, negative, undefined)
+    if (!Number.isFinite(seconds) || seconds < 0) {
+      return '0:00';
+    }
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
+
+  // Handle email verification
+  const handleEmailVerification = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!interview) return;
+
+    setIsVerifying(true);
+    setVerificationError('');
+
+    // Normalize emails for comparison (lowercase, trim)
+    const inputEmail = emailInput.trim().toLowerCase();
+    const organizerEmail = interview.organizer_email?.trim().toLowerCase();
+
+    if (!organizerEmail) {
+      // No organizer email set - allow access (legacy interviews)
+      setIsUnlocked(true);
+      sessionStorage.setItem(`watch_unlocked_${code}`, 'true');
+      setIsVerifying(false);
+      return;
+    }
+
+    if (inputEmail === organizerEmail) {
+      setIsUnlocked(true);
+      sessionStorage.setItem(`watch_unlocked_${code}`, 'true');
+    } else {
+      setVerificationError('Email does not match. Please enter the email of the person who created this interview.');
+    }
+
+    setIsVerifying(false);
+  }, [interview, emailInput, code]);
 
   const handleMouseMove = useCallback(() => {
     if (isTheaterMode) {
@@ -359,6 +418,97 @@ export default function WatchPage() {
     );
   }
 
+  // Email verification gate
+  if (!isUnlocked) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-md"
+        >
+          <div className="text-center mb-8">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', bounce: 0.5 }}
+              className="w-20 h-20 mx-auto bg-amber-500/20 rounded-full flex items-center justify-center mb-6"
+            >
+              <svg className="w-10 h-10 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </motion.div>
+            <h1 className="text-2xl font-serif text-white mb-2">
+              This video is protected
+            </h1>
+            <p className="text-stone-400 text-sm">
+              To unlock {interview.interviewee_name}&apos;s story, enter the email of the person who created this interview.
+            </p>
+          </div>
+
+          <form onSubmit={handleEmailVerification} className="space-y-4">
+            <div>
+              <input
+                type="email"
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                placeholder="Enter organizer's email"
+                className="w-full px-4 py-4 bg-stone-900 border border-stone-800 rounded-xl text-white placeholder-stone-500 focus:outline-none focus:border-amber-500 transition-colors"
+                required
+              />
+            </div>
+
+            {verificationError && (
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-red-400 text-sm text-center"
+              >
+                {verificationError}
+              </motion.p>
+            )}
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              disabled={isVerifying || !emailInput}
+              className="w-full py-4 bg-amber-500 text-white rounded-xl font-medium hover:bg-amber-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {isVerifying ? (
+                <>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                    className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                  />
+                  Verifying...
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                  </svg>
+                  Unlock Video
+                </>
+              )}
+            </motion.button>
+          </form>
+
+          <p className="text-xs text-stone-600 text-center mt-6">
+            This protects your family&apos;s memories. Only the person who created this interview can share access.
+          </p>
+
+          <div className="mt-8 pt-8 border-t border-stone-900 text-center">
+            <Link href="/" className="text-stone-500 hover:text-stone-300 text-sm transition-colors">
+              ← Back to Home
+            </Link>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
@@ -382,7 +532,7 @@ export default function WatchPage() {
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                   </svg>
                 </div>
-                <span className="font-light text-stone-300 tracking-wide hidden sm:block">Family Roots</span>
+                <span className="font-light text-stone-300 tracking-wide hidden sm:block">My House Tales</span>
               </Link>
 
               <div className="flex items-center gap-4">

@@ -22,7 +22,7 @@ export function ShareLink({ interviewLink, intervieweeName }: ShareLinkProps) {
   };
 
   const shareViaEmail = () => {
-    const subject = encodeURIComponent(`Share your story - Family Roots Interview`);
+    const subject = encodeURIComponent(`Share your story - My House Tales Interview`);
     const body = encodeURIComponent(
       `Hi ${intervieweeName},\n\nI'd love to hear your story and preserve it for our family. I've set up an interview for you - just click the link below when you're ready:\n\n${interviewLink}\n\nTake your time, there's no rush. Your stories matter.\n\nWith love`
     );

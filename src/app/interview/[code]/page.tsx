@@ -452,6 +452,15 @@ export default function InterviewPage() {
 
   // Handle starting interview (go to camera setup first)
   const handleStart = async () => {
+    // Track interview started for TikTok Pixel
+    if (typeof window !== 'undefined' && (window as any).ttq) {
+      (window as any).ttq.track('SubmitForm', {
+        content_type: 'product',
+        content_id: 'my-house-tales-interview',
+        content_name: 'Interview Started',
+      });
+    }
+
     await initializeMedia();
     setScreenState('camera_setup');
   };
@@ -687,6 +696,8 @@ export default function InterviewPage() {
 
   // Review screen - after recording, before upload
   if (screenState === 'review' && interview && pendingRecording) {
+    const videoUrl = URL.createObjectURL(pendingRecording.videoBlob);
+
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-6">
         {isProcessing ? (
@@ -700,30 +711,24 @@ export default function InterviewPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center space-y-6 max-w-md w-full"
           >
-            <div className="w-16 h-16 mx-auto bg-amber-500/20 rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+            {/* Video playback */}
+            <div className="relative rounded-2xl overflow-hidden bg-stone-900 aspect-video">
+              <video
+                src={videoUrl}
+                controls
+                playsInline
+                className="w-full h-full object-cover"
+              />
             </div>
 
             <div className="space-y-2">
               <h1 className="text-2xl font-serif text-white">
-                How was that?
+                Review your answer
               </h1>
-              <p className="text-stone-400">
-                {formatDuration(pendingRecording.duration)} recorded
+              <p className="text-stone-500 text-sm">
+                Play it back or continue to the next question
               </p>
             </div>
-
-            {/* Show transcript preview if available */}
-            {pendingRecording.transcript && (
-              <div className="p-4 bg-stone-900/50 border border-stone-800 rounded-xl text-left max-h-32 overflow-y-auto">
-                <p className="text-xs text-stone-500 mb-2">What we heard:</p>
-                <p className="text-sm text-stone-300 italic">
-                  &ldquo;{pendingRecording.transcript.slice(0, 200)}{pendingRecording.transcript.length > 200 ? '...' : ''}&rdquo;
-                </p>
-              </div>
-            )}
 
             {uploadError && (
               <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
@@ -738,7 +743,7 @@ export default function InterviewPage() {
                 onClick={confirmRecording}
                 className="w-full py-4 bg-amber-500 text-white rounded-xl font-medium text-lg shadow-lg shadow-amber-500/25 hover:bg-amber-400 transition-colors"
               >
-                Keep & Continue
+                Looks good, continue
               </motion.button>
 
               <button
@@ -748,7 +753,7 @@ export default function InterviewPage() {
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
-                Redo This Answer
+                Record again
               </button>
             </div>
           </motion.div>
@@ -889,7 +894,7 @@ export default function InterviewPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           </div>
-          <span className="font-semibold text-stone-200">Family Roots</span>
+          <span className="font-semibold text-stone-200">My House Tales</span>
         </div>
 
         <div className="flex items-center gap-2">

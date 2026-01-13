@@ -49,7 +49,7 @@ function LoginContent() {
           </h1>
           <p className="text-stone-400">
             {isRedirecting 
-              ? 'Join Family Roots to save and manage your family stories' 
+              ? 'Join My House Tales to save and manage your family stories' 
               : 'Sign in to manage your family stories'}
           </p>
         </div>

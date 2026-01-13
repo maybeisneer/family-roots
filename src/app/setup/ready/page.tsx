@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { StepIndicator } from '@/components/setup/StepIndicator';
 import { getSetupState, clearSetupState } from '@/lib/storage';
 import { useAuth } from '@/lib/auth-context';
@@ -12,6 +12,7 @@ import Link from 'next/link';
 export default function SetupReadyPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [organizerName, setOrganizerName] = useState('');
   const [intervieweeName, setIntervieweeName] = useState('');
   const [interviewLink, setInterviewLink] = useState('');
@@ -24,6 +25,14 @@ export default function SetupReadyPage() {
     const state = getSetupState();
     setOrganizerName(state.organizer_name || '');
     setIntervieweeName(state.interviewee_name || '');
+
+    // Verify payment was completed
+    const sessionId = searchParams.get('session_id');
+    if (!sessionId) {
+      setError('Payment required. Please complete checkout first.');
+      setIsCreating(false);
+      return;
+    }
 
     const initInterview = async () => {
       setIsCreating(true);
@@ -38,9 +47,28 @@ export default function SetupReadyPage() {
       }
 
       try {
+        // Verify payment with Stripe
+        const verifyResponse = await fetch('/api/checkout/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId }),
+        });
+
+        if (!verifyResponse.ok) {
+          const verifyError = await verifyResponse.json();
+          if (verifyResponse.status === 402) {
+            setError('Payment not completed. Please complete checkout first.');
+          } else {
+            setError(verifyError.error || 'Could not verify payment.');
+          }
+          setIsCreating(false);
+          return;
+        }
+
         const payload = {
           organizer_id: user.uid,  // Now guaranteed to exist
           organizer_name: state.organizer_name,
+          organizer_email: user.email || undefined,  // For email notifications
           interviewee_name: state.interviewee_name,
           interviewee_age: state.interviewee_age,
           relationship: state.relationship,
@@ -56,8 +84,43 @@ export default function SetupReadyPage() {
         const result = await createInterview(payload);
 
         const baseUrl = window.location.origin;
-        setInterviewLink(`${baseUrl}/interview/${result.interview_link_code}`);
-        
+        const newInterviewLink = `${baseUrl}/interview/${result.interview_link_code}`;
+        setInterviewLink(newInterviewLink);
+
+        // Send email with interview link to organizer
+        if (user.email) {
+          try {
+            await fetch('/api/send-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                type: 'interview-link',
+                to: user.email,
+                intervieweeName: state.interviewee_name,
+                interviewLink: newInterviewLink,
+              }),
+            });
+            console.log('✅ Interview link email sent');
+          } catch (emailErr) {
+            console.error('Failed to send interview link email:', emailErr);
+          }
+        }
+
+        // Track purchase conversion for TikTok
+        if (typeof window !== 'undefined' && (window as any).ttq) {
+          (window as any).ttq.track('CompletePayment', {
+            contents: [
+              {
+                content_id: 'my-house-tales-interview',
+                content_type: 'product',
+                content_name: 'My House Tales Interview',
+              }
+            ],
+            value: 49.99,
+            currency: 'USD',
+          });
+        }
+
         // Clear setup state after successful creation
         clearSetupState();
       } catch (err: any) {
@@ -72,7 +135,7 @@ export default function SetupReadyPage() {
     if (!authLoading && user) {
       initInterview();
     }
-  }, [user, authLoading]);
+  }, [user, authLoading, searchParams]);
 
   const handleGoogleSignIn = async () => {
     setIsSigningIn(true);
@@ -110,7 +173,7 @@ export default function SetupReadyPage() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Family Roots - Share Your Story',
+          title: 'My House Tales - Share Your Story',
           text: shareText,
           url: interviewLink,
         });

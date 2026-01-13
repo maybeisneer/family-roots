@@ -31,7 +31,7 @@ export default function YourNamePage() {
       organizer_name: organizerName.trim(),
     }));
 
-    router.push('/setup/ready');
+    router.push('/setup/payment');
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

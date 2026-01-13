@@ -59,7 +59,7 @@ export default function DashboardPage() {
       <header className="border-b border-stone-800 bg-stone-900/20 backdrop-blur-md sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/" className="text-xl font-serif font-bold text-amber-500">
-            Family Roots
+            My House Tales
           </Link>
           <div className="flex items-center gap-6">
             <span className="text-sm text-stone-400 hidden sm:inline">

@@ -65,10 +65,39 @@ export default function InterviewCompletePage() {
         // Stage 2: Translation
         setProcessingStage('translating');
         setProcessedCount(0);
-        
+
         const translateRes = await fetch(`/api/interviews/${interview.id}/translate`, {
           method: 'POST',
         });
+
+        // Track interview completion for TikTok Pixel
+        if (typeof window !== 'undefined' && (window as any).ttq) {
+          (window as any).ttq.track('CompleteRegistration', {
+            content_type: 'product',
+            content_id: 'my-house-tales-interview',
+            content_name: 'Interview Completed',
+          });
+        }
+
+        // Send email notification to organizer
+        if (interview.organizer_email) {
+          const watchUrl = `${window.location.origin}/watch/${code}`;
+          try {
+            await fetch('/api/send-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                to: interview.organizer_email,
+                intervieweeName: interview.interviewee_name,
+                watchUrl,
+              }),
+            });
+            console.log('✅ Notification email sent to organizer');
+          } catch (emailErr) {
+            console.error('Failed to send notification email:', emailErr);
+            // Don't fail the whole process if email fails
+          }
+        }
 
         if (translateRes.ok) {
           setProcessingStage('complete');
@@ -84,7 +113,7 @@ export default function InterviewCompletePage() {
     processInterview();
   }, [code]);
 
-  const playbackLink = `${typeof window !== 'undefined' ? window.location.origin : ''}/watch/${code}`;
+  const playbackLink = `${typeof window !== 'undefined' ? window.location.origin : ''}/watch/${code}?from=complete`;
 
   return (
     <div className="min-h-screen bg-stone-950 flex items-center justify-center p-6">
@@ -240,7 +269,7 @@ export default function InterviewCompletePage() {
             </Link>
             <button
               onClick={() => {
-                const shareText = `I just preserved my family's story with Family Roots. It's an incredible way to capture memories for future generations. Check it out: ${window.location.origin}`;
+                const shareText = `I just preserved my family's story with My House Tales. It's an incredible way to capture memories for future generations. Check it out: ${window.location.origin}`;
                 if (navigator.share) {
                   navigator.share({ text: shareText, url: window.location.origin });
                 } else {
