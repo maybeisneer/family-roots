@@ -100,53 +100,84 @@ export default function HomePage() {
           }} />
         </div>
 
-        <div className="relative max-w-4xl mx-auto px-6 pt-20 pb-32">
+        <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-16 md:pb-32">
           {/* Logo/Brand Removed - using Header instead */}
-          <div className="h-16" /> 
+          <div className="h-16" />
 
-          {/* Main headline */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="space-y-6 mb-12"
-          >
-            <h1 className="text-4xl md:text-6xl font-serif text-white leading-tight">
-              Preserve the stories
-              <br />
-              <span className="text-amber-500">that matter most</span>
-          </h1>
-            <p className="text-xl text-stone-400 max-w-xl leading-relaxed">
-              Capture your family&apos;s history through guided video interviews. 
-              An AI helps ask the right questions, so no story gets lost.
-            </p>
-          </motion.div>
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+            {/* Left column - Text */}
+            <div>
+              {/* Main headline */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="space-y-6 mb-8"
+              >
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white leading-tight">
+                  Preserve the stories
+                  <br />
+                  <span className="text-amber-500">that matter most</span>
+                </h1>
+                <p className="text-lg md:text-xl text-stone-400 max-w-xl leading-relaxed">
+                  Capture your family&apos;s history through guided video interviews.
+                  An AI helps ask the right questions, so no story gets lost.
+                </p>
+              </motion.div>
 
-          {/* CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="flex flex-col sm:flex-row gap-4"
-          >
-            <button
-              onClick={() => {
-                if (user) {
-                  router.push('/setup');
-                } else {
-                  router.push('/login?redirect=/setup');
-                }
-              }}
-              className="px-8 py-4 bg-amber-500 text-white rounded-xl font-medium text-lg shadow-lg shadow-amber-500/25 hover:bg-amber-400 transition-colors"
+              {/* CTA */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="flex flex-col sm:flex-row gap-4"
+              >
+                <button
+                  onClick={() => {
+                    if (user) {
+                      router.push('/setup');
+                    } else {
+                      router.push('/login?redirect=/setup');
+                    }
+                  }}
+                  className="px-8 py-4 bg-amber-500 text-white rounded-xl font-medium text-lg shadow-lg shadow-amber-500/25 hover:bg-amber-400 transition-colors"
+                >
+                  Start an Interview
+                </button>
+                <a href="#how-it-works">
+                  <button className="px-8 py-4 text-stone-400 hover:text-white transition-colors">
+                    See how it works →
+                  </button>
+                </a>
+              </motion.div>
+            </div>
+
+            {/* Right column - Video */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+              className="relative flex justify-center md:justify-end"
             >
-              Start an Interview
-            </button>
-            <a href="#how-it-works">
-              <button className="px-8 py-4 text-stone-400 hover:text-white transition-colors">
-                See how it works →
-              </button>
-            </a>
-          </motion.div>
+              <div className="relative w-[220px] md:w-[260px] lg:w-[280px]">
+                {/* Video with rounded corners */}
+                <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-black/50">
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full aspect-[9/16] object-cover"
+                  >
+                    <source src="/videos/hero-demo.mp4" type="video/mp4" />
+                  </video>
+                </div>
+
+                {/* Ambient glow */}
+                <div className="absolute -inset-8 bg-amber-500/20 rounded-full blur-3xl -z-10" />
+              </div>
+            </motion.div>
+          </div>
         </div>
       </div>
 
@@ -167,35 +198,22 @@ export default function HomePage() {
           </p>
         </motion.div>
 
-        {/* Video Placeholder */}
+        {/* Demo Video */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="relative aspect-video bg-stone-900 rounded-2xl overflow-hidden border border-stone-800"
+          className="relative rounded-2xl overflow-hidden border border-stone-800 shadow-2xl"
         >
-          {/* Replace this div with your actual video */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="w-20 h-20 bg-amber-500/20 rounded-full flex items-center justify-center mb-4 cursor-pointer hover:bg-amber-500/30 transition-colors">
-              <svg className="w-8 h-8 text-amber-500 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </div>
-            <p className="text-stone-500 text-sm">Demo video coming soon</p>
-            <p className="text-stone-600 text-xs mt-2">
-              Replace with: /videos/demo.mp4
-            </p>
-          </div>
-          
-          {/* Uncomment and use this when you have a video:
-          <video 
-            className="w-full h-full object-cover"
-            controls
-            poster="/videos/demo-poster.jpg"
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full aspect-video object-cover"
           >
             <source src="/videos/demo.mp4" type="video/mp4" />
           </video>
-          */}
         </motion.div>
       </div>
 
@@ -313,8 +331,8 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* UGC Gallery Section */}
-      <div className="max-w-5xl mx-auto px-6 py-20">
+      {/* UGC Video Carousel Section */}
+      <div className="max-w-6xl mx-auto px-6 py-20">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -323,73 +341,37 @@ export default function HomePage() {
         >
           <p className="text-amber-500 text-sm font-medium mb-4">Moments worth preserving</p>
           <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">
-            Families watching together
+            Stories captured forever
           </h2>
           <p className="text-stone-400 max-w-xl mx-auto">
-            There&apos;s nothing quite like gathering to hear stories from the ones you love
+            Watch how families are preserving their most precious memories
           </p>
         </motion.div>
 
-        {/* UGC Image Grid */}
-        <div className="grid md:grid-cols-2 gap-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="relative aspect-[4/3] rounded-2xl overflow-hidden"
-          >
-            <Image
-              src="/ugc/tiktok-couch.jpeg"
-              alt="Watching interview on TV from couch"
-              fill
-              className="object-cover"
-            />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="relative aspect-[4/3] rounded-2xl overflow-hidden"
-          >
-            <Image
-              src="/ugc/family-tv-night.jpeg"
-              alt="Multi-generational family watching together"
-              fill
-              className="object-cover"
-            />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="relative aspect-[4/3] rounded-2xl overflow-hidden"
-          >
-            <Image
-              src="/ugc/instagram-story-crying.jpeg"
-              alt="Emotional moment watching grandpa's interview"
-              fill
-              className="object-cover"
-            />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="relative aspect-[4/3] rounded-2xl overflow-hidden"
-          >
-            <Image
-              src="/ugc/sharing-phone.jpeg"
-              alt="Sharing interview on phone"
-              fill
-              className="object-cover"
-            />
-          </motion.div>
+        {/* Video Carousel */}
+        <div className="flex gap-4 md:gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide justify-center">
+          {['/videos/ugc-1.mp4', '/videos/ugc-2.mp4', '/videos/ugc-3.mp4'].map((video, index) => (
+            <motion.div
+              key={video}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="flex-shrink-0 snap-center"
+            >
+              <div className="relative w-[200px] md:w-[240px] rounded-2xl overflow-hidden shadow-xl shadow-black/30">
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full aspect-[9/16] object-cover"
+                >
+                  <source src={video} type="video/mp4" />
+                </video>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
 

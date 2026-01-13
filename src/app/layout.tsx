@@ -16,8 +16,31 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "My House Tales - Preserve Your Family's Stories",
-  description: "Capture and preserve your family's stories through AI-guided video interviews. A gift for generations to come.",
-  keywords: ["family history", "oral history", "video interview", "family stories", "genealogy"],
+  description: "Capture your family's stories before they're gone. AI-guided video interviews that ask the right questions, so no memory is lost.",
+  keywords: ["family history", "oral history", "video interview", "family stories", "genealogy", "immigrant stories", "family memories"],
+  metadataBase: new URL("https://myhousetales.com"),
+  openGraph: {
+    title: "Preserve the stories that matter most",
+    description: "Capture your family's history through AI-guided video interviews. Perfect for immigrant families - works in any language.",
+    url: "https://myhousetales.com",
+    siteName: "My House Tales",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Family gathering to watch stories together",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Preserve the stories that matter most",
+    description: "Capture your family's history through AI-guided video interviews. Perfect for immigrant families.",
+    images: ["/og-image.jpg"],
+  },
 };
 
 export default function RootLayout({
