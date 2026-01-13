@@ -88,6 +88,7 @@ export default function InterviewCompletePage() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 to: interview.organizer_email,
+                organizerName: interview.organizer_name,
                 intervieweeName: interview.interviewee_name,
                 watchUrl,
               }),

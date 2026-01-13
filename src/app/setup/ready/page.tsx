@@ -96,6 +96,7 @@ export default function SetupReadyPage() {
               body: JSON.stringify({
                 type: 'interview-link',
                 to: user.email,
+                organizerName: state.organizer_name,
                 intervieweeName: state.interviewee_name,
                 interviewLink: newInterviewLink,
               }),
