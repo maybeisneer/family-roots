@@ -130,7 +130,6 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="flex flex-col sm:flex-row gap-4"
               >
                 <button
                   onClick={() => {
@@ -144,11 +143,6 @@ export default function HomePage() {
                 >
                   Start an Interview
                 </button>
-                <a href="#how-it-works">
-                  <button className="px-8 py-4 text-stone-400 hover:text-white transition-colors">
-                    See how it works →
-                  </button>
-                </a>
               </motion.div>
             </div>
 
