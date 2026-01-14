@@ -53,17 +53,31 @@ export default function HomePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [activityIndex, setActivityIndex] = useState(0);
+  const [showActivity, setShowActivity] = useState(false);
 
-  // Rotate through live activities with random timing
+  // Show live activity with random timing - initial delay then longer intervals
   useEffect(() => {
-    const scheduleNext = () => {
-      const randomDelay = 2500 + Math.random() * 3000; // 2.5-5.5 seconds
-      return setTimeout(() => {
+    let timeout: NodeJS.Timeout;
+
+    const scheduleNext = (isFirst: boolean) => {
+      // First appearance: 2-5 seconds, subsequent: 10-60 seconds
+      const delay = isFirst
+        ? 2000 + Math.random() * 3000
+        : 10000 + Math.random() * 50000;
+
+      timeout = setTimeout(() => {
         setActivityIndex((prev) => (prev + 1) % LIVE_ACTIVITIES.length);
-        scheduleNext();
-      }, randomDelay);
+        setShowActivity(true);
+
+        // Hide after 4-6 seconds
+        setTimeout(() => {
+          setShowActivity(false);
+          scheduleNext(false);
+        }, 4000 + Math.random() * 2000);
+      }, delay);
     };
-    const timeout = scheduleNext();
+
+    scheduleNext(true);
     return () => clearTimeout(timeout);
   }, []);
 
@@ -175,20 +189,22 @@ export default function HomePage() {
 
                 {/* Live activity ticker */}
                 <div className="h-6 overflow-hidden">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activityIndex}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.3 }}
-                      className="flex items-center gap-2 text-sm text-stone-500"
-                    >
-                      <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                      <span>
-                        Someone in {LIVE_ACTIVITIES[activityIndex].location} {LIVE_ACTIVITIES[activityIndex].action} {LIVE_ACTIVITIES[activityIndex].subject} {LIVE_ACTIVITIES[activityIndex].flag}
-                      </span>
-                    </motion.div>
+                  <AnimatePresence>
+                    {showActivity && (
+                      <motion.div
+                        key={activityIndex}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3 }}
+                        className="flex items-center gap-2 text-sm text-stone-500"
+                      >
+                        <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                        <span>
+                          Someone in {LIVE_ACTIVITIES[activityIndex].location} {LIVE_ACTIVITIES[activityIndex].action} {LIVE_ACTIVITIES[activityIndex].subject} {LIVE_ACTIVITIES[activityIndex].flag}
+                        </span>
+                      </motion.div>
+                    )}
                   </AnimatePresence>
                 </div>
               </motion.div>
