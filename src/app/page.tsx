@@ -1,11 +1,25 @@
 'use client';
 
-import { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
+
+// Live activity feed data - simulated social proof
+const LIVE_ACTIVITIES = [
+  { action: 'started an interview with', subject: 'their grandmother', location: 'Delhi', flag: '🇮🇳' },
+  { action: 'is watching', subject: 'their grandfather\'s story', location: 'Toronto', flag: '🇨🇦' },
+  { action: 'created an interview for', subject: 'their dad', location: 'Mexico City', flag: '🇲🇽' },
+  { action: 'is watching', subject: 'their nana\'s memories', location: 'London', flag: '🇬🇧' },
+  { action: 'started an interview with', subject: 'their mom', location: 'Sydney', flag: '🇦🇺' },
+  { action: 'created an interview for', subject: 'their abuela', location: 'Miami', flag: '🇺🇸' },
+  { action: 'is watching', subject: 'their grandmother\'s story', location: 'Berlin', flag: '🇩🇪' },
+  { action: 'started an interview with', subject: 'their grandfather', location: 'Mumbai', flag: '🇮🇳' },
+  { action: 'created an interview for', subject: 'their baba', location: 'Minsk', flag: '🇧🇾' },
+  { action: 'is watching', subject: 'their family stories', location: 'São Paulo', flag: '🇧🇷' },
+];
 
 // Placeholder testimonials - replace with real data
 const TESTIMONIALS = [
@@ -38,6 +52,15 @@ const TESTIMONIALS = [
 export default function HomePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [activityIndex, setActivityIndex] = useState(0);
+
+  // Rotate through live activities
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActivityIndex((prev) => (prev + 1) % LIVE_ACTIVITIES.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Track page view for TikTok Pixel
   useEffect(() => {
@@ -130,6 +153,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
+                className="space-y-4"
               >
                 <button
                   onClick={() => {
@@ -143,6 +167,25 @@ export default function HomePage() {
                 >
                   Start an Interview
                 </button>
+
+                {/* Live activity ticker */}
+                <div className="h-6 overflow-hidden">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activityIndex}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3 }}
+                      className="flex items-center gap-2 text-sm text-stone-500"
+                    >
+                      <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                      <span>
+                        Someone in {LIVE_ACTIVITIES[activityIndex].location} {LIVE_ACTIVITIES[activityIndex].flag} {LIVE_ACTIVITIES[activityIndex].action} {LIVE_ACTIVITIES[activityIndex].subject}
+                      </span>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
               </motion.div>
             </div>
 
@@ -212,12 +255,12 @@ export default function HomePage() {
       </div>
 
       {/* Features Section */}
-      <div className="max-w-4xl mx-auto px-6 py-20">
+      <div className="max-w-5xl mx-auto px-6 py-20">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="grid md:grid-cols-3 gap-8"
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {/* Feature 1 */}
           <div className="space-y-4">
@@ -228,8 +271,7 @@ export default function HomePage() {
             </div>
             <h3 className="text-lg font-medium text-stone-200">AI-Guided Questions</h3>
             <p className="text-stone-500 text-sm leading-relaxed">
-              Our AI asks thoughtful follow-up questions based on their responses, 
-              uncovering stories they might not think to share.
+              Thoughtful follow-up questions that uncover stories they might not think to share.
             </p>
           </div>
 
@@ -242,12 +284,24 @@ export default function HomePage() {
             </div>
             <h3 className="text-lg font-medium text-stone-200">Video Recording</h3>
             <p className="text-stone-500 text-sm leading-relaxed">
-              Simple, pressure-free recording. No time limits. 
-              The focus is on their story, not the technology.
+              Simple, pressure-free recording with no time limits. Focus on the story.
             </p>
           </div>
 
           {/* Feature 3 */}
+          <div className="space-y-4">
+            <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center">
+              <svg className="w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-stone-200">Private & Secure</h3>
+            <p className="text-stone-500 text-sm leading-relaxed">
+              Videos are only accessible to your family. No public sharing, ever.
+            </p>
+          </div>
+
+          {/* Feature 4 */}
           <div className="space-y-4">
             <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center">
               <svg className="w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -256,8 +310,7 @@ export default function HomePage() {
             </div>
             <h3 className="text-lg font-medium text-stone-200">Share with Family</h3>
             <p className="text-stone-500 text-sm leading-relaxed">
-              A beautiful playback experience with transcripts. 
-              Share the link so the whole family can watch together.
+              Beautiful playback with transcripts. Share the link with the whole family.
             </p>
           </div>
         </motion.div>
