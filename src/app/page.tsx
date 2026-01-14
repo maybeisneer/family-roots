@@ -54,12 +54,17 @@ export default function HomePage() {
   const router = useRouter();
   const [activityIndex, setActivityIndex] = useState(0);
 
-  // Rotate through live activities
+  // Rotate through live activities with random timing
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActivityIndex((prev) => (prev + 1) % LIVE_ACTIVITIES.length);
-    }, 4000);
-    return () => clearInterval(interval);
+    const scheduleNext = () => {
+      const randomDelay = 2500 + Math.random() * 3000; // 2.5-5.5 seconds
+      return setTimeout(() => {
+        setActivityIndex((prev) => (prev + 1) % LIVE_ACTIVITIES.length);
+        scheduleNext();
+      }, randomDelay);
+    };
+    const timeout = scheduleNext();
+    return () => clearTimeout(timeout);
   }, []);
 
   // Track page view for TikTok Pixel
@@ -181,7 +186,7 @@ export default function HomePage() {
                     >
                       <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                       <span>
-                        Someone in {LIVE_ACTIVITIES[activityIndex].location} {LIVE_ACTIVITIES[activityIndex].flag} {LIVE_ACTIVITIES[activityIndex].action} {LIVE_ACTIVITIES[activityIndex].subject}
+                        Someone in {LIVE_ACTIVITIES[activityIndex].location} {LIVE_ACTIVITIES[activityIndex].action} {LIVE_ACTIVITIES[activityIndex].subject} {LIVE_ACTIVITIES[activityIndex].flag}
                       </span>
                     </motion.div>
                   </AnimatePresence>

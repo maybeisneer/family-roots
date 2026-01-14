@@ -40,6 +40,11 @@ export const RELATIONSHIPS: { value: Relationship; label: string }[] = [
   { value: 'grandfather', label: 'Grandfather' },
   { value: 'aunt', label: 'Aunt' },
   { value: 'uncle', label: 'Uncle' },
+  { value: 'spouse', label: 'Spouse' },
+  { value: 'partner', label: 'Partner' },
+  { value: 'sibling', label: 'Sibling' },
+  { value: 'cousin', label: 'Cousin' },
+  { value: 'friend', label: 'Friend' },
   { value: 'other', label: 'Other' },
 ];
 

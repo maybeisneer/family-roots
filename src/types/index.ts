@@ -87,12 +87,17 @@ export interface LanguageOption {
 }
 
 // Relationship options
-export type Relationship = 
+export type Relationship =
   | 'mother'
   | 'father'
   | 'grandmother'
   | 'grandfather'
   | 'aunt'
   | 'uncle'
+  | 'spouse'
+  | 'partner'
+  | 'sibling'
+  | 'cousin'
+  | 'friend'
   | 'other';
 
