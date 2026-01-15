@@ -191,11 +191,6 @@ export default function HomePage() {
                   <span className="relative z-10">Start an Interview</span>
                 </button>
 
-                <div className="flex items-center gap-3 text-stone-500">
-                  <span className="text-sm">$49.99</span>
-                  <span className="w-1 h-1 rounded-full bg-stone-700" />
-                  <span className="text-sm">One-time payment</span>
-                </div>
               </motion.div>
 
               {/* Live activity ticker */}
@@ -312,9 +307,9 @@ export default function HomePage() {
                 How it works
               </p>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white leading-[1.1] mb-8">
-                A conversation,
+                A conversation
                 <br />
-                <span className="italic">not</span> an interrogation.
+                <span className="italic">to remember.</span>
               </h2>
               <p className="text-lg text-stone-400 leading-relaxed max-w-md">
                 Send them a link. They open it on their phone or computer.
@@ -424,7 +419,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Immigrant families section */}
+      {/* Why now section */}
       <section className="relative py-32 md:py-40 border-t border-stone-900">
         <div className="max-w-7xl mx-auto px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -435,7 +430,7 @@ export default function HomePage() {
               transition={{ duration: 0.8 }}
             >
               <p className="text-amber-500/80 text-sm tracking-[0.2em] uppercase mb-6">
-                For immigrant families
+                Why now
               </p>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white leading-[1.1] mb-8">
                 Before the
@@ -443,8 +438,8 @@ export default function HomePage() {
                 stories <span className="italic">fade.</span>
               </h2>
               <p className="text-lg text-stone-400 leading-relaxed mb-8">
-                Your parents and grandparents carry decades of stories—about the villages
-                they grew up in, the families they left behind, the journeys they took.
+                Your parents and grandparents carry decades of stories—about how they met,
+                the places they grew up, the lessons they learned, the moments that shaped them.
                 These stories are precious, but they&apos;re not written down anywhere.
               </p>
 
@@ -452,7 +447,7 @@ export default function HomePage() {
                 {[
                   'Works in any language they\'re comfortable with',
                   'No time pressure—they can take breaks anytime',
-                  'Automatic transcription and translation',
+                  'Automatic transcription so nothing is lost',
                 ].map((item, index) => (
                   <motion.li
                     key={index}

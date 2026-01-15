@@ -95,30 +95,30 @@ export const QUESTION_THEMES = {
 };
 
 // Get starter questions based on relationship and birthplace
-// These are simpler fallback questions - 5 easy-to-answer questions covering life arcs
+// These are the initial questions - always start with childhood and parents
 export function getStarterQuestions(relationship: string, birthplace: string, currentLocation?: string): string[] {
   const questions: string[] = [];
 
-  // 1. Early life - simple and concrete
-  questions.push(`What was your childhood home like in ${birthplace}?`);
+  // 1. Always start with childhood - universal and easy to answer
+  questions.push(`Tell me about your childhood in ${birthplace}. What do you remember most?`);
 
-  // 2. Formative years
-  questions.push("What did you love doing as a teenager?");
+  // 2. Always ask about parents - core family history
+  questions.push("Tell me about your parents. What were they like?");
 
-  // 3. Love & relationships - open-ended, works for anyone
-  questions.push("Who has been the most important person in your life?");
+  // 3. Early life memories - sensory and concrete
+  questions.push("What are some of your earliest memories? What sounds, smells, or feelings come back to you?");
 
-  // 4. Life journey - migration or career
+  // 4. Life journey - migration or turning point
   if (currentLocation && birthplace &&
       !currentLocation.toLowerCase().includes(birthplace.toLowerCase()) &&
       !birthplace.toLowerCase().includes(currentLocation.toLowerCase())) {
-    questions.push(`What made you decide to move to ${currentLocation}?`);
+    questions.push(`What made you decide to leave ${birthplace}?`);
   } else {
-    questions.push("What was the biggest risk you ever took?");
+    questions.push("What was a turning point in your life that changed everything?");
   }
 
-  // 5. Reflection - simple wisdom
-  questions.push("What do you wish you'd known when you were 20?");
+  // 5. Wisdom - reflection
+  questions.push("What do you know now that you wish you'd known when you were young?");
 
   return questions;
 }
