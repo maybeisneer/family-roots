@@ -312,9 +312,9 @@ export default function HomePage() {
                 <span className="italic">to remember.</span>
               </h2>
               <p className="text-lg text-stone-400 leading-relaxed max-w-md">
-                Send them a link. They open it on their phone or computer.
-                Our AI asks thoughtful questions and listens patiently.
-                No rush. No pressure. Just stories flowing naturally.
+                Tell us about your loved one. With your information, our AI asks thoughtful
+                questions and listens patiently. No rush. No pressure. Just stories that
+                your future family members can come back to watch, forever.
               </p>
             </motion.div>
           </div>
