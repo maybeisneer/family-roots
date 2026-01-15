@@ -505,9 +505,9 @@ export default function HomePage() {
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif text-white leading-[1.05] mb-8">
-              Start preserving
+              Save precious
               <br />
-              <span className="italic text-amber-500">today.</span>
+              <span className="italic text-amber-500">stories.</span>
             </h2>
             <p className="text-xl text-stone-400 mb-12 max-w-lg mx-auto">
               It only takes a few minutes to set up. Send the link and let them share at their own pace.
