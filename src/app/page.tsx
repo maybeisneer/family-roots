@@ -201,7 +201,7 @@ export default function HomePage() {
                   onClick={handleStartInterview}
                   className="group relative px-10 py-5 bg-amber-500 text-stone-950 font-medium text-lg tracking-wide overflow-hidden transition-all hover:bg-amber-400"
                 >
-                  <span className="relative z-10">Explore</span>
+                  <span className="relative z-10">Get started</span>
                 </button>
 
                 {/* Social proof stats */}
