@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { StepIndicator, SETUP_STEPS } from '@/components/setup/StepIndicator';
 import { RELATIONSHIPS } from '@/lib/questions';
 import { getSetupState, setSetupState } from '@/lib/storage';
+import { trackEvent } from '@/lib/firebase';
 
 export default function SetupStep1() {
   const router = useRouter();
@@ -33,6 +34,8 @@ export default function SetupStep1() {
         currency: 'USD',
       });
     }
+    // Firebase Analytics
+    trackEvent('begin_checkout', { step: 1, page: 'setup_interviewee' });
   }, []);
 
   const validate = () => {

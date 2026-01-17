@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
+import { trackEvent } from '@/lib/firebase';
 
 // Live activity feed data - simulated social proof
 const LIVE_ACTIVITIES = [
@@ -89,8 +90,9 @@ export default function HomePage() {
     return () => clearTimeout(timeout);
   }, []);
 
-  // Track page view for TikTok Pixel
+  // Track page view for TikTok Pixel and Firebase Analytics
   useEffect(() => {
+    // TikTok Pixel
     if (typeof window !== 'undefined' && (window as any).ttq) {
       (window as any).ttq.track('ViewContent', {
         content_type: 'product',
@@ -98,9 +100,12 @@ export default function HomePage() {
         content_name: 'My House Tales Landing Page',
       });
     }
+    // Firebase Analytics
+    trackEvent('page_view', { page: 'landing' });
   }, []);
 
   const handleStartInterview = () => {
+    trackEvent('cta_click', { button: 'start_interview', page: 'landing' });
     if (user) {
       router.push('/setup');
     } else {

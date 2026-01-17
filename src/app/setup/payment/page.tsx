@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { StepIndicator } from '@/components/setup/StepIndicator';
 import { getSetupState } from '@/lib/storage';
+import { trackEvent } from '@/lib/firebase';
 
 export default function PaymentPage() {
   const router = useRouter();
@@ -19,6 +20,8 @@ export default function PaymentPage() {
     const state = getSetupState();
     setOrganizerName(state.organizer_name || '');
     setIntervieweeName(state.interviewee_name || '');
+    // Firebase Analytics
+    trackEvent('page_view', { page: 'payment' });
   }, []);
 
   const handleCheckout = async () => {
@@ -41,6 +44,8 @@ export default function PaymentPage() {
       // Small delay to ensure event is sent before navigation
       await new Promise(resolve => setTimeout(resolve, 100));
     }
+    // Firebase Analytics
+    trackEvent('initiate_checkout', { value: 49.99, currency: 'USD' });
 
     try {
       const response = await fetch('/api/checkout', {

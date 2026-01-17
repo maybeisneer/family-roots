@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { StepIndicator } from '@/components/setup/StepIndicator';
 import { getSetupState, clearSetupState } from '@/lib/storage';
 import { useAuth } from '@/lib/auth-context';
-import { signInWithGoogle, createInterview } from '@/lib/firebase';
+import { signInWithGoogle, createInterview, trackEvent } from '@/lib/firebase';
 import Link from 'next/link';
 
 export default function SetupReadyPage() {
@@ -121,6 +121,8 @@ export default function SetupReadyPage() {
             currency: 'USD',
           });
         }
+        // Firebase Analytics
+        trackEvent('purchase', { value: 49.99, currency: 'USD', transaction_id: result.id });
 
         // Clear setup state after successful creation
         clearSetupState();
