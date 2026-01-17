@@ -23,19 +23,33 @@ export const auth = getAuth(app);
 
 // Initialize Analytics (client-side only)
 let analytics: Analytics | null = null;
+let analyticsReady: Promise<Analytics | null> | null = null;
+
 if (typeof window !== 'undefined') {
-  isSupported().then((supported) => {
+  analyticsReady = isSupported().then((supported) => {
     if (supported) {
       analytics = getAnalytics(app);
       console.log('🔥 Firebase Analytics initialized');
+      return analytics;
     }
+    return null;
   });
 }
 
-// Analytics helper functions
-export const trackEvent = (eventName: string, eventParams?: Record<string, any>) => {
+// Analytics helper functions - waits for analytics to be ready
+export const trackEvent = async (eventName: string, eventParams?: Record<string, any>) => {
+  if (typeof window === 'undefined') return;
+
+  // Wait for analytics to initialize if it hasn't yet
+  if (!analytics && analyticsReady) {
+    await analyticsReady;
+  }
+
   if (analytics) {
     logEvent(analytics, eventName, eventParams);
+    console.log('📊 Event tracked:', eventName, eventParams);
+  } else {
+    console.warn('⚠️ Analytics not available, event not tracked:', eventName);
   }
 };
 

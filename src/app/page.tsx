@@ -47,7 +47,8 @@ const FEATURES = [
 export default function HomePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const [activityIndex, setActivityIndex] = useState(0);
+  // Randomize initial activity index
+  const [activityIndex, setActivityIndex] = useState(() => Math.floor(Math.random() * LIVE_ACTIVITIES.length));
   const [showActivity, setShowActivity] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
 
@@ -200,7 +201,7 @@ export default function HomePage() {
                   onClick={handleStartInterview}
                   className="group relative px-10 py-5 bg-amber-500 text-stone-950 font-medium text-lg tracking-wide overflow-hidden transition-all hover:bg-amber-400"
                 >
-                  <span className="relative z-10">Start an Interview</span>
+                  <span className="relative z-10">Explore</span>
                 </button>
 
                 {/* Social proof stats */}
@@ -551,18 +552,18 @@ export default function HomePage() {
       <AnimatePresence>
         {showActivity && (
           <motion.div
-            initial={{ opacity: 0, y: 20, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: 20, x: '-50%' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.4 }}
-            className="fixed bottom-6 left-1/2 z-50"
+            className="fixed bottom-6 left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 z-50"
           >
-            <div className="flex items-center gap-3 px-5 py-3 bg-stone-800 border border-stone-700 rounded-full shadow-xl shadow-black/30">
-              <span className="text-lg">{LIVE_ACTIVITIES[activityIndex].flag}</span>
-              <span className="text-sm text-stone-300">
+            <div className="flex items-center gap-2 md:gap-3 px-4 py-2.5 md:px-5 md:py-3 bg-stone-800 border border-stone-700 rounded-full shadow-xl shadow-black/30 max-w-full md:max-w-none">
+              <span className="text-base md:text-lg shrink-0">{LIVE_ACTIVITIES[activityIndex].flag}</span>
+              <span className="text-xs md:text-sm text-stone-300 truncate">
                 Someone in {LIVE_ACTIVITIES[activityIndex].location} {LIVE_ACTIVITIES[activityIndex].action} {LIVE_ACTIVITIES[activityIndex].subject}
               </span>
-              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shrink-0" />
             </div>
           </motion.div>
         )}
