@@ -2,6 +2,7 @@ import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore, collection, doc, setDoc, getDoc, updateDoc, query, where, getDocs, deleteDoc, orderBy } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
+import { getAnalytics, isSupported, logEvent, Analytics } from 'firebase/analytics';
 import type { Interview, SuggestedQuestion, Response } from '@/types';
 
 const firebaseConfig = {
@@ -11,6 +12,7 @@ const firebaseConfig = {
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET?.trim(), // Trim any whitespace/newlines
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
@@ -18,6 +20,24 @@ const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0
 export const db = getFirestore(app);
 export const storage = getStorage(app); // Uses storageBucket from config
 export const auth = getAuth(app);
+
+// Initialize Analytics (client-side only)
+let analytics: Analytics | null = null;
+if (typeof window !== 'undefined') {
+  isSupported().then((supported) => {
+    if (supported) {
+      analytics = getAnalytics(app);
+      console.log('🔥 Firebase Analytics initialized');
+    }
+  });
+}
+
+// Analytics helper functions
+export const trackEvent = (eventName: string, eventParams?: Record<string, any>) => {
+  if (analytics) {
+    logEvent(analytics, eventName, eventParams);
+  }
+};
 
 // Debug: Log storage bucket on init
 if (typeof window !== 'undefined') {

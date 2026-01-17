@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { StepIndicator } from '@/components/setup/StepIndicator';
+import { getSetupState, setSetupState } from '@/lib/storage';
 
 export default function YourNamePage() {
   const router = useRouter();
@@ -11,25 +12,17 @@ export default function YourNamePage() {
   const [intervieweeName, setIntervieweeName] = useState('');
 
   useEffect(() => {
-    // Load existing data
-    const saved = localStorage.getItem('family_roots_setup');
-    if (saved) {
-      const data = JSON.parse(saved);
-      if (data.organizer_name) setOrganizerName(data.organizer_name);
-      if (data.interviewee_name) setIntervieweeName(data.interviewee_name);
-    }
+    // Load existing data using the shared storage utility
+    const state = getSetupState();
+    if (state.organizer_name) setOrganizerName(state.organizer_name);
+    if (state.interviewee_name) setIntervieweeName(state.interviewee_name);
   }, []);
 
   const handleContinue = () => {
     if (!organizerName.trim()) return;
 
-    // Save to localStorage
-    const saved = localStorage.getItem('family_roots_setup');
-    const data = saved ? JSON.parse(saved) : {};
-    localStorage.setItem('family_roots_setup', JSON.stringify({
-      ...data,
-      organizer_name: organizerName.trim(),
-    }));
+    // Save using the shared storage utility
+    setSetupState({ organizer_name: organizerName.trim() });
 
     router.push('/setup/payment');
   };

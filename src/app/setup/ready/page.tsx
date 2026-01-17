@@ -318,6 +318,11 @@ export default function SetupReadyPage() {
               <p className="text-amber-500 text-sm break-all font-mono">
                 {interviewLink}
               </p>
+              {user?.email && (
+                <p className="text-xs text-stone-500 mt-2">
+                  Also sent to {user.email} (check spam)
+                </p>
+              )}
             </div>
 
             {/* Action buttons */}
